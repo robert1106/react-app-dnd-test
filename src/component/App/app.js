@@ -2,12 +2,26 @@ import React, {useEffect, useState} from "react";
 import {request} from "../../service/data-request";
 import AccordionList from "../Accordion-list/accordion-list";
 
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import {arrayMoveImmutable} from 'array-move';
 import uniqid from 'uniqid';
+
+const SortableItem = SortableElement(({value}) =>
+    <li className="sortable-element">{value[0].toUpperCase()+value.slice(1)}</li>);
+
+const SortableList = SortableContainer(({items}) => {
+    return (
+        <ul className="sortable">
+            {items.map((value, index) => (
+                <SortableItem key={uniqid()} index={index} value={value} />
+            ))}
+        </ul>
+    );
+});
 
 export default function App() {
 
     const [orderList, setOrderList] = useState(["size", "color", "mood", "shape", "material"]);
-    const [currentOrder, setCurrentOrder] = useState(null);
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -17,47 +31,14 @@ export default function App() {
             });
     }, [])
 
-    const dragStartHandler = (event, order) => {
-        setCurrentOrder(order)
-    }
-    const dragLeaveHandler = (event) => {
-    }
-    const dragEndHandler = (event) => {
-    }
-    const dragOverHandler = (event) => {
-        event.preventDefault();
-    }
-    const dropHandler = (event, order) => {
-        event.preventDefault();
-        setOrderList(orderList.map(o => {
-            if(o === order) {
-                return currentOrder;
-            }
-            if (o === currentOrder) {
-                return order;
-            }
-            return o;
-        }))
+    const onSortEnd = ({oldIndex, newIndex}) => {
+        let arr = arrayMoveImmutable(orderList, oldIndex, newIndex);
+        setOrderList(arr);
     }
 
     return (
         <>
-            <ul className="sortable">
-                {orderList.map((order) => {
-                    return (
-                        <li onDragStart={(event) => dragStartHandler(event, order)}
-                            onDragLeave={(event) => dragLeaveHandler(event)}
-                            onDragEnd={(event) => dragEndHandler(event)}
-                            onDragOver={(event) => dragOverHandler(event)}
-                            onDrop={(event) => dropHandler(event, order)}
-                            draggable={true}
-                            className="sortable-element"
-                            key={uniqid()}>
-                            {order}
-                        </li>
-                    )
-                })}
-            </ul>
+            <SortableList items={orderList} onSortEnd={onSortEnd} axis='x'/>
             <AccordionList data={data} deep={0} order={orderList}/>
         </>
     )

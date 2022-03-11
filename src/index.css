@@ -18,3 +18,46 @@
   border-radius: 10px;
   cursor: pointer;
 }
+
+.accordion-list {
+  font-family: sans-serif;
+  color: #333;
+  margin: 15px;
+  list-style: none;
+}
+
+.accordion-item {
+  margin: 2px 0;
+  padding: 2px ;
+  border: 1px solid #e6bf00;
+}
+
+.accordion-item-header {
+  padding: 5px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.item-name {
+  margin: 25px;
+}
+
+.deep-0 {
+  background: #ffd500;
+}
+
+.deep-1 {
+  background: #ffe666;
+}
+
+.deep-2 {
+  background: #fe9;
+}
+
+.deep-3 {
+  background: #fff2b3;
+}
+
+.deep-4 {
+  background: #fff6cc;
+}
